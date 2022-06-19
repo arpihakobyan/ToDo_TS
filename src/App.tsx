@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import ToDoForm from './components/ToDoForm';
+import { TodoInterface } from './interfaces/interfaces';
+import { useStore } from 'effector-react';
+import { ToDoStores } from './stores/todos/todos';
+import { ToDoEvents } from './stores/todos/todos';
+import ToDoItem from './components/ToDoItem';
 
 function App() {
+
+  const todoStore = useStore(ToDoStores.todoStores)
+
+  const onAddBtn = (value: string) => {
+
+    const newTodo: TodoInterface = {
+      todo: value,
+      checked: false
+    }
+    ToDoEvents.addTodo(newTodo)
+  }
+  const onDelete = (index: number) => {
+    ToDoEvents.deleteTodo(index)
+  }
+  const onLined = (item: TodoInterface[]) => {
+    ToDoEvents.linedTodo(item)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ToDoForm onAddBtn={onAddBtn} />
+      <ToDoItem todoStore={todoStore} onDelete={onDelete} onLined={onLined} />
+    </>
   );
 }
 
